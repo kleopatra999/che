@@ -17,6 +17,7 @@ import static org.eclipse.che.ide.api.notification.StatusNotification.DisplayMod
 import static org.eclipse.che.ide.api.notification.StatusNotification.Status.FAIL;
 import static org.eclipse.che.ide.api.parts.PartStackType.EDITING;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -742,6 +743,7 @@ public class EditorAgentImpl
 
                   promiseCallback.onSuccess(null);
                   openEditorCallback.onEditorOpened(editor);
+                  openEditorCallback.onEditorActivated(editor);
                 }
 
                 @Override
@@ -841,7 +843,7 @@ public class EditorAgentImpl
     @Override
     public void onEditorActivated(EditorPartPresenter editor) {
       if (editor instanceof TextEditor) {
-        ((TextEditor) editor).setTopLine(topLine);
+        Scheduler.get().scheduleDeferred(() -> ((TextEditor) editor).setTopLine(topLine));
       }
     }
   }
